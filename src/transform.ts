@@ -47,7 +47,7 @@ export function transformJpnknToOneComme(
 
   const parts = jpnknPayload.body.split('<>');
   const baseName = parts[0] || '名無し';
-  const name = prefixResNo ? `${jpnknPayload.no} ${baseName}` : baseName;
+  const name = prefixResNo ? `${jpnknPayload.no.padEnd(4, ' ')} ${baseName}` : baseName;
   const mail = parts[1] || '';
   const comment = parts[3] || '';
   
