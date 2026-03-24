@@ -1,3 +1,8 @@
+---
+name: release-build
+description: リリースビルドを実行する（バージョン確認 → package.json 更新 → npm run build → .exe 確認）
+---
+
 # Release Build
 
 リリースビルドを行うスキルです。
