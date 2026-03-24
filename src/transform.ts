@@ -7,9 +7,9 @@
  */
 function unescapeHtml(str: string): string {
   return str
-    .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>');
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
 }
 
 export interface JpnknPayload {
