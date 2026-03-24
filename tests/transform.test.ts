@@ -80,6 +80,34 @@ describe('transformJpnknToOneComme - 新形式', () => {
     });
   });
 
+  describe('HTMLエスケープのアンエスケープ', () => {
+    test('本文の &lt; &gt; &amp; がアンエスケープされる', () => {
+      const jpnknPayload: JpnknPayload = {
+        body: '名無し<><>2026/02/03(火) 12:00:00<>a &lt; b &gt; c &amp; d<>',
+        no: '1',
+        bbsid: 'news',
+        threadkey: '12345'
+      };
+
+      const result = transformJpnknToOneComme(jpnknPayload, defaultOptions);
+
+      expect(result.comment.comment).toBe('a < b > c & d');
+    });
+
+    test('名前の &lt; &gt; &amp; がアンエスケープされる', () => {
+      const jpnknPayload: JpnknPayload = {
+        body: 'A&amp;B<><>2026/02/03(火) 12:00:00<>テスト<>',
+        no: '1',
+        bbsid: 'news',
+        threadkey: '12345'
+      };
+
+      const result = transformJpnknToOneComme(jpnknPayload, defaultOptions);
+
+      expect(result.comment.name).toBe('A&B');
+    });
+  });
+
   describe('メッセージ本文のマッピング', () => {
     test('通常のテキストメッセージが正しくマッピングされる', () => {
       const jpnknPayload: JpnknPayload = {
