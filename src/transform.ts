@@ -2,6 +2,16 @@
  * jpnkn MQTT ペイロード → わんコメ API ペイロードへの変換モジュール
  */
 
+/**
+ * jpnknがMQTTペイロードに含めるHTMLエスケープ文字を元に戻す
+ */
+function unescapeHtml(str: string): string {
+  return str
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+}
+
 export interface JpnknPayload {
   body: string;       // "名前<>メール<>日時<>本文<>" 形式
   no: string;         // レス番号（文字列）
@@ -46,10 +56,10 @@ export function transformJpnknToOneComme(
   }
 
   const parts = jpnknPayload.body.split('<>');
-  const baseName = parts[0] || '名無し';
+  const baseName = unescapeHtml(parts[0] || '名無し');
   const name = prefixResNo ? `${jpnknPayload.no.padEnd(4, ' ')} ${baseName}` : baseName;
   const mail = parts[1] || '';
-  const comment = parts[3] || '';
+  const comment = unescapeHtml(parts[3] || '');
   
   if (!comment) {
     throw new Error('message is required in jpnkn payload');
@@ -86,8 +96,8 @@ export function parsePayload(raw: string): string {
   try {
     const j = JSON.parse(raw) as JpnknPayload;
     const parts = j.body.split('<>');
-    const name = parts[0] || '';
-    const message = parts[3] || '';
+    const name = unescapeHtml(parts[0] || '');
+    const message = unescapeHtml(parts[3] || '');
     const no = j.no ? `No.${j.no} ` : '';
     const namePrefix = name ? `${name} > ` : '';
     return `${no}${namePrefix}${message}`;
